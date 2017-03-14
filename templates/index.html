@@ -1,0 +1,21 @@
+<html>
+<head>
+  <title>The Wall</title>
+</head>
+<body>
+  <h1>CodingDojo Wall</h1>
+  {% with message_list = get_flashed_messages() %}
+    {% if message_list %}
+      <ul class="error-messaging">
+      {% for message in message_list %}
+        <li>{{message}}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+  {% endwith %}
+  <form action='/success' method='POST'>
+    <label for="message">Post a message<input type="text" name="message" id="message"></label>
+    <button>Post a message</button>
+  </form>
+</body>
+</html>
