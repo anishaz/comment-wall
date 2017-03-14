@@ -13,9 +13,27 @@
       </ul>
     {% endif %}
   {% endwith %}
-  <form action='/success' method='POST'>
-    <label for="message">Post a message<input type="text" name="message" id="message"></label>
-    <button>Post a message</button>
+  <h2>Register here</h2>
+  <h3>(If new user)</h2>
+  <form action="/wall" method="POST">
+    <label for="first_name">First Name</label>
+    <input type="text" name="firstName">
+    <label for="last_name">Last Name</label>
+    <input type="text" name="lastName">
+    <label for="email">Email</label>
+    <input type="text" name="email">
+    <label for="password">Password</label>
+    <input type="password" name="password">
+    <label for="confirm_password">Confirm Password</label>
+    <input type="password" name="confirmPassword">
+    <button>Submit</button>
   </form>
+  <h2>Login here</h2>
+  <form action="/wall" method="POST">
+    <label for="email">Email</label>
+    <input type="email" name="email">
+    <label for="password">Password</label>
+    <input type="password" name="password">
+    <button>Submit</button>
 </body>
 </html>
