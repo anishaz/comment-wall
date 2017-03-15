@@ -13,7 +13,7 @@ mysql = MySQLConnector(app,'walldb')
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return render_template('welcome.html')
 
 @app.route('/register', methods=['POST'])
 def register():
@@ -53,13 +53,13 @@ def register():
 def login():
     session['logged-in'] = True
     loggedIn = session['logged-in']
-    if loggedIn == True:
+    if loggedIn == False:
         print 'cookie is true'
-    return render_template('index.html')
+    return redirect('/welcome')
 
 @app.route('/wall', methods=['POST'])
 def checkLoginStatus():
-    if loggedIn == True:
+    if loggedIn == False:
         return redirect('/login')
 
     #shows a list of the current list of emails
