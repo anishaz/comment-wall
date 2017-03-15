@@ -15,9 +15,10 @@ mysql = MySQLConnector(app,'walldb')
 def index():
     return render_template('index.html')
 
-@app.route('/wall', methods=['POST'])
-def submitted():
+@app.route('/register', methods=['POST'])
+def register():
     valid = True
+    flash("Thank you for registering!")
 
     # check if all fields are being entered since nothing can be blank
     for field in request.form:
@@ -48,6 +49,19 @@ def submitted():
     if(valid == False):
         return redirect('/')
 
+@app.route('/login', methods=['POST'])
+def login():
+    session['logged-in'] = True
+    loggedIn = session['logged-in']
+    if loggedIn == True:
+        print 'cookie is true'
+    return render_template('index.html')
+
+@app.route('/wall', methods=['POST'])
+def checkLoginStatus():
+    if loggedIn == True:
+        return redirect('/login')
+
     #shows a list of the current list of emails
     # query = "SELECT * FROM emails"
     # emails = mysql.query_db(query)
@@ -60,7 +74,6 @@ def submitted():
     # }
     #
     # mysql.query_db(query,data)
-
     return render_template('wall.html')
 
 app.run(debug=True)
