@@ -13,7 +13,7 @@ mysql = MySQLConnector(app,'walldb')
 
 @app.route('/')
 def index():
-    return render_template('welcome.html')
+    return render_template('index.html')
 
 @app.route('/register', methods=["POST"])
 def register():
@@ -62,9 +62,9 @@ def register():
 
     return redirect('/')
 
-@app.route('/login', methods=["POST"])
-def login ():
-    print "logged in"
+@app.route('/wall', methods=["GET", "POST"])
+def something():
+    print "yea!"
 
     data = {
         'email': request.form['email']
@@ -81,17 +81,12 @@ def login ():
     else:
         flash("Invalid e-mail address. Please try again or register if it is your first time here.")
         return redirect('/')
-
-    return render_template("wall.html")
-
-@app.route('/wall', methods=["GET", "POST"])
-def something():
-    print "yea!"
-    #shows a list of the current list of messages
-    query = "SELECT * FROM messages"
-    messages = mysql.query_db(query)
-
-    #function for adding the messages to the list
+    #
+    # # shows a list of the current list of messages
+    # query = "SELECT * FROM messages"
+    # messages = mysql.query_db(query)
+    #
+    # #function for adding the messages to the list
     # query = "INSERT INTO messages (message) VALUES (:message)"
     #
     # data = {
@@ -99,6 +94,7 @@ def something():
     # }
     #
     # mysql.query_db(query,data)
-    return render_template('wall.html', all_messages = messages)
+
+    return render_template("wall.html")
 
 app.run(debug=True)
