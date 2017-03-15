@@ -13,11 +13,12 @@
       </ul>
     {% endif %}
   {% endwith %}
-  <form action='/wall' method='POST'>
+  {{ all_messages }}
+  <form action='/wall' method="POST">
     <label for="message">Post a message<input type="text" name="message" id="message"></label>
     <button>Post a message</button>
   </form>
-  <form action='/wall' method='POST'>
+  <form action='/wall' method="POST">
     <label for="comment">Post a comment<input type="text" name="comment" id="comment"></label>
     <button>Post a comment</button>
   </form>

@@ -11,6 +11,16 @@ app.secret_key = "thisisasupersecretkey"
 
 mysql = MySQLConnector(app,'walldb')
 
+def checkUserLogin():
+    session['logged-in'] = True
+    global loggedIn
+    loggedIn = session['logged-in']
+    if loggedIn == True:
+        print 'cookie is true'
+    else:
+        print 'cookie is false'
+
+
 @app.route('/')
 def index():
     return render_template('welcome.html')
@@ -18,7 +28,6 @@ def index():
 @app.route('/register', methods=["POST"])
 def register():
     valid = True
-    flash("Thank you for registering!")
 
     # check if all fields are being entered since nothing can be blank
     for field in request.form:
@@ -59,33 +68,46 @@ def register():
     query = "INSERT INTO users (first_name, last_name, email, password) VALUES (:first_name, :last_name, :email, :password)"
     mysql.query_db(query,data)
     print "registered"
-    return render_template('wall.html')
+    checkUserLogin()
+    return redirect('/wall')
 
-@app.route('/login', methods=['POST'])
-def login():
-    session['logged-in'] = True
-    loggedIn = session['logged-in']
-    if loggedIn == False:
-        print 'cookie is true'
-    return redirect('/welcome')
+@app.route('/login', methods=["POST"])
+def login ():
+    print "logged in"
 
-@app.route('/wall', methods=['POST'])
-def checkLoginStatus():
-    if loggedIn == False:
-        return redirect('/login')
+    data = {
+        'email': request.form['email']
+    }
 
+    user_email = mysql.query_db("SELECT id, email, password FROM users WHERE email = :email", data)
+    if user_email:
+        if request.form['password'] == user_email[0]['password']:
+            session['user'] = user_email[0]['id']
+            flash("Welcome Back!")
+        else:
+            flash("Incorrect password. Please try again")
+            return redirect('/')
+    else:
+        flash("Invalid e-mail address. Please try again or register if it is your first time here.")
+        return redirect('/')
+
+    return render_template("wall.html")
+
+@app.route('/wall', methods=["GET", "POST"])
+def something():
+    print "yea!"
     #shows a list of the current list of messages
-    # query = "SELECT * FROM emails"
-    # messages = mysql.query_db(query)
-    #
-    # # function for adding the emails to the list
-    # query = "INSERT INTO emails (email, created_at) VALUES (:email, NOW())"
+    query = "SELECT * FROM messages"
+    messages = mysql.query_db(query)
+
+    #function for adding the messages to the list
+    # query = "INSERT INTO messages (message) VALUES (:message)"
     #
     # data = {
-    #         'email': request.form['email']
+    #          'message': request.form['message']
     # }
     #
     # mysql.query_db(query,data)
-    return render_template('wall.html')
+    return render_template('wall.html', all_messages = messages)
 
 app.run(debug=True)
