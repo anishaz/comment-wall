@@ -85,7 +85,7 @@ def login():
 def wall():
     print "yea!"
 
-    msg_query = "SELECT * FROM messages;"
+    msg_query = "SELECT CONCAT(users.first_name, ' ', users.last_name) AS name, messages.* FROM messages JOIN users ON users.id = messages.user_id ORDER BY created_at DESC;"
     comment_query = "SELECT * FROM comments;"
     messages = mysql.query_db(msg_query)
     comments = mysql.query_db(comment_query)

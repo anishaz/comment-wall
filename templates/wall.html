@@ -21,7 +21,10 @@
     <button>Post a Message</button>
   </form>
   {% for message in messages %}
-    <p>{{ message['message'] }}</p>
+    <div class="message">
+      <p><h3>{{ message['name'] }} - {{ message ['created_at'] }}</h3></p>
+      <p>{{ message['message'] }}</p>
+    </div>
   {% endfor %}
   <!-- <form action='/wall' method="POST">
     <label for="comment">Post a comment<input type="text" name="comment" id="comment"></label>
