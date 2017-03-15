@@ -11,16 +11,6 @@ app.secret_key = "thisisasupersecretkey"
 
 mysql = MySQLConnector(app,'walldb')
 
-def checkUserLogin():
-    session['logged-in'] = True
-    global loggedIn
-    loggedIn = session['logged-in']
-    if loggedIn == True:
-        print 'cookie is true'
-    else:
-        print 'cookie is false'
-
-
 @app.route('/')
 def index():
     return render_template('welcome.html')
@@ -28,6 +18,7 @@ def index():
 @app.route('/register', methods=["POST"])
 def register():
     valid = True
+    flash("You have successfully registered. Please login below.")
 
     # check if all fields are being entered since nothing can be blank
     for field in request.form:
@@ -68,8 +59,8 @@ def register():
     query = "INSERT INTO users (first_name, last_name, email, password) VALUES (:first_name, :last_name, :email, :password)"
     mysql.query_db(query,data)
     print "registered"
-    checkUserLogin()
-    return redirect('/wall')
+
+    return redirect('/')
 
 @app.route('/login', methods=["POST"])
 def login ():
