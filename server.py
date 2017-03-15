@@ -15,7 +15,7 @@ mysql = MySQLConnector(app,'walldb')
 def index():
     return render_template('welcome.html')
 
-@app.route('/register', methods=['POST'])
+@app.route('/register', methods=["POST"])
 def register():
     valid = True
     flash("Thank you for registering!")
@@ -49,6 +49,18 @@ def register():
     if(valid == False):
         return redirect('/')
 
+    data = {
+        'first_name': request.form['firstName'],
+        'last_name': request.form['lastName'],
+        'email': request.form['email'],
+        'password': request.form['password']
+    }
+
+    query = "INSERT INTO users (first_name, last_name, email, password) VALUES (:first_name, :last_name, :email, :password)"
+    mysql.query_db(query,data)
+    print "registered"
+    return render_template('wall.html')
+
 @app.route('/login', methods=['POST'])
 def login():
     session['logged-in'] = True
@@ -62,9 +74,9 @@ def checkLoginStatus():
     if loggedIn == False:
         return redirect('/login')
 
-    #shows a list of the current list of emails
+    #shows a list of the current list of messages
     # query = "SELECT * FROM emails"
-    # emails = mysql.query_db(query)
+    # messages = mysql.query_db(query)
     #
     # # function for adding the emails to the list
     # query = "INSERT INTO emails (email, created_at) VALUES (:email, NOW())"
