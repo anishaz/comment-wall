@@ -62,10 +62,9 @@ def register():
 
     return redirect('/')
 
-@app.route('/wall', methods=["GET", "POST"])
-def something():
-    print "yea!"
-
+@app.route('/login', methods=["POST"])
+def login():
+    print request.form
     data = {
         'email': request.form['email']
     }
@@ -74,26 +73,30 @@ def something():
     if user_email:
         if request.form['password'] == user_email[0]['password']:
             session['user'] = user_email[0]['id']
-            flash("Welcome Back!")
+            return redirect('/wall')
         else:
             flash("Incorrect password. Please try again")
             return redirect('/')
     else:
         flash("Invalid e-mail address. Please try again or register if it is your first time here.")
         return redirect('/')
-    #
-    # # shows a list of the current list of messages
-    # query = "SELECT * FROM messages"
-    # messages = mysql.query_db(query)
-    #
-    # #function for adding the messages to the list
-    # query = "INSERT INTO messages (message) VALUES (:message)"
-    #
-    # data = {
-    #          'message': request.form['message']
-    # }
-    #
-    # mysql.query_db(query,data)
+
+@app.route('/wall', methods=["GET","POST"])
+def something():
+    print "yea!"
+
+    #shows a list of the current list of messages
+    query = "SELECT * FROM messages"
+    messages = mysql.query_db(query)
+
+    #function for adding the messages to the list
+    query = "INSERT INTO messages (message) VALUES (:message)"
+
+    data = {
+             'message': request.form['message']
+    }
+
+    mysql.query_db(query,data)
 
     return render_template("wall.html")
 
