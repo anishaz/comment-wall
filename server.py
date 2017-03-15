@@ -1,6 +1,6 @@
 from flask import Flask, request, redirect, render_template, session, flash
 from mysqlconnection import MySQLConnector
-import re
+import bcrypt, re
 
 EMAIL_REGEX = re.compile(r'^[a-zA-Z0-9.+_-]+@[a-zA-Z0-9._-]+\.[a-zA-Z]+$')
 NAME_REGEX = re.compile(r'[a-zA-Z]')
@@ -23,7 +23,7 @@ def register():
     # check if all fields are being entered since nothing can be blank
     for field in request.form:
         if len(request.form[field]) == 0:
-            flash(field + " must not be blank. Please check and re-submit.")
+            flash(field.replace("_", " ") + " must not be blank. Please check and re-submit.")
             valid = False
 
     # check for email validation
@@ -81,23 +81,29 @@ def login():
         flash("Invalid e-mail address. Please try again or register if it is your first time here.")
         return redirect('/')
 
-@app.route('/wall', methods=["GET","POST"])
-def something():
+@app.route('/wall')
+def wall():
     print "yea!"
 
-    #shows a list of the current list of messages
-    query = "SELECT * FROM messages"
-    messages = mysql.query_db(query)
+    msg_query = "SELECT * FROM messages;"
+    comment_query = "SELECT * FROM comments;"
+    messages = mysql.query_db(msg_query)
+    comments = mysql.query_db(comment_query)
 
-    #function for adding the messages to the list
-    query = "INSERT INTO messages (message) VALUES (:message)"
+    return render_template("wall.html", messages=messages, comments=comments)
+
+@app.route('/message', methods=["POST"])
+def message():
 
     data = {
-             'message': request.form['message']
+        'user_id': session['user'],
+        'message': request.form['message']
     }
 
-    mysql.query_db(query,data)
+    message_insert_query = "INSERT INTO messages (user_id, message) VALUES (:user_id, :message)"
 
-    return render_template("wall.html")
+    message_id = mysql.query_db(message_insert_query, data)
+
+    return redirect ('/wall')
 
 app.run(debug=True)
