@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>The Wall</title>
+  <link rel="stylesheet" href="/static/styles.css">
 </head>
 <body>
   <h1>The Wall</h1>
@@ -15,12 +16,12 @@
 
   {% for message in messages %}
     <div class="message">
-      <p><h3>{{ message['name'] }}  {{ message['created_at'] }}</h3></p>
+      <p><h3>{{ message['name'] }}  {{ message['created_at'].strftime('%B %d %Y') }}</h3></p>
       <p>{{ message['message'] }}</p>
       <div class="comments">
         {% for comment in comments %}
           <div class="comment">
-              <p><h5>{{ comment['name'] }}</h5> - {{ message['created_at'] }}</p>
+              <p><h5>{{ comment['name'] }}</h5> - {{ message['created_at'].strftime('%B %d %Y') }}</p>
               <p>{{ comment ['comment'] }}</p>
           </div>
         {% endfor %}

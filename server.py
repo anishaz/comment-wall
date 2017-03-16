@@ -92,7 +92,7 @@ def wall():
         data = {
             'message_id': message['id']
         }
-        message['comments'] = mysql.query_db("SELECT comments.*, CONCAT(users.first_name, ' ', users.last_name) AS name FROM  comments JOIN users ON users.id = comments.user_id WHERE message_id = :message_id", data)
+        message['comments'] = mysql.query_db("SELECT comments.*, CONCAT(users.first_name, ' ', users.last_name) AS name FROM comments JOIN users ON users.id = comments.user_id WHERE message_id = :message_id", data)
 
     comments = mysql.query_db(comment_query)
 
