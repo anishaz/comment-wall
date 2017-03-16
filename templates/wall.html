@@ -6,29 +6,29 @@
 </head>
 <body>
   <h1>The Wall</h1>
-  <!-- {% with message_list = get_flashed_messages() %}
-    {% if message_list %}
-      <ul class="error-messaging">
-      {% for message in message_list %}
-        <li>{{message}}</li>
-        {% endfor %}
-      </ul>
-    {% endif %}
-  {% endwith %}
-  {{ all_messages }} -->
+  <h4>Welcome, {{ session['name'] }}
   <form action='/message' method="POST">
-    <label for="message">Post a message<textarea name="message"></textarea>
+    <label for="message">Post a Message<textarea name="message"></textarea>
     <button>Post a Message</button>
   </form>
+
   {% for message in messages %}
     <div class="message">
-      <p><h3>{{ message['name'] }} - {{ message ['created_at'] }}</h3></p>
+      <p><h3>{{ message['name'] }}  {{ message['created_at'] }}</h3></p>
       <p>{{ message['message'] }}</p>
-    </div>
-  {% endfor %}
-  <!-- <form action='/wall' method="POST">
-    <label for="comment">Post a comment<input type="text" name="comment" id="comment"></label>
-    <button>Post a comment</button>
-  </form> -->
+      <div class="comments">
+        {% for comment in comments %}
+          <div class="comment">
+              <p><h5>{{ comment['name'] }}</h5> - {{ message['created_at'] }}</p>
+              <p>{{ comment ['comment'] }}</p>
+          </div>
+        {% endfor %}
+      </div>
+    <form action='/comment/{{ message['id'] }}' method="POST">
+      <label for="comment">Post a comment<textarea name="comment"></textarea>
+      <button>Post a Comment</button>
+    </form>
+  </div>
+{% endfor %}
 </body>
 </html>

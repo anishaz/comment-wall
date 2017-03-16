@@ -64,15 +64,15 @@ def register():
 
 @app.route('/login', methods=["POST"])
 def login():
-    print request.form
     data = {
         'email': request.form['email']
     }
 
-    user_email = mysql.query_db("SELECT id, email, password FROM users WHERE email = :email", data)
+    user_email = mysql.query_db("SELECT id, email, password, first_name FROM users WHERE email = :email", data)
     if user_email:
         if request.form['password'] == user_email[0]['password']:
             session['user'] = user_email[0]['id']
+            session['name'] = user_email[0]['first_name']
             return redirect('/wall')
         else:
             flash("Incorrect password. Please try again")
@@ -83,14 +83,20 @@ def login():
 
 @app.route('/wall')
 def wall():
-    print "yea!"
 
     msg_query = "SELECT CONCAT(users.first_name, ' ', users.last_name) AS name, messages.* FROM messages JOIN users ON users.id = messages.user_id ORDER BY created_at DESC;"
+
     comment_query = "SELECT * FROM comments;"
     messages = mysql.query_db(msg_query)
+    for message in messages:
+        data = {
+            'message_id': message['id']
+        }
+        message['comments'] = mysql.query_db("SELECT comments.*, CONCAT(users.first_name, ' ', users.last_name) AS name FROM  comments JOIN users ON users.id = comments.user_id WHERE message_id = :message_id", data)
+
     comments = mysql.query_db(comment_query)
 
-    return render_template("wall.html", messages=messages, comments=comments)
+    return render_template("wall.html", messages = messages, comments = comments)
 
 @app.route('/message', methods=["POST"])
 def message():
@@ -101,9 +107,23 @@ def message():
     }
 
     message_insert_query = "INSERT INTO messages (user_id, message) VALUES (:user_id, :message)"
-
     message_id = mysql.query_db(message_insert_query, data)
 
     return redirect ('/wall')
+
+@app.route('/comment/<message_id>', methods=["POST"])
+def comment(message_id):
+
+    data = {
+        'user_id': session['user'],
+        'post_id': message_id,
+        'comment': request.form['comment']
+    }
+
+    comment_insert_query = "INSERT INTO comments (user_id, message_id, comment) VALUES (:user_id, :post_id, :comment)"
+    comment_id = mysql.query_db(comment_insert_query, data)
+
+    return redirect('/wall')
+
 
 app.run(debug=True)
