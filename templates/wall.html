@@ -19,9 +19,10 @@
       <p><h3>{{ message['name'] }}  {{ message['created_at'].strftime('%B %d %Y') }}</h3></p>
       <p>{{ message['message'] }}</p>
       <div class="comments">
-        {% for comment in comments %}
+        {% for comment in message['comments'] %}
           <div class="comment">
-              <p><h5>{{ comment['name'] }}</h5> - {{ message['created_at'].strftime('%B %d %Y') }}</p>
+              <h4>{{ comment['name'] }}</h4>
+              <p>{{ message['created_at'].strftime('%B %d %Y') }}</p>
               <p>{{ comment ['comment'] }}</p>
           </div>
         {% endfor %}
