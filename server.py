@@ -125,5 +125,13 @@ def comment(message_id):
 
     return redirect('/wall')
 
+@app.route('/logout')
+def getout():
+    if 'user' in session:
+        session.pop('user')
+    if 'name' in session:
+        session.pop('name')
+
+    return redirect ('/')
 
 app.run(debug=True)

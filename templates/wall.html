@@ -7,6 +7,7 @@
 <body>
   <h1>The Wall</h1>
   <h4>Welcome, {{ session['name'] }}
+  <p><a href='/logout'>Logout</a></p>
   <form action='/message' method="POST">
     <label for="message">Post a Message<textarea name="message"></textarea>
     <button>Post a Message</button>
